@@ -6,7 +6,7 @@ class MovieTest
   def initialize results
     #2D array of tuples in form [usr, mv, rating, predicted_rating]
     @results = results
-    @err = results.map { |usr, mv, r, pr| diff(r, pr) }
+    @err = results.map { |_usr, _mv, r, pr| diff(r, pr) }
   end
 
   #average prediction error

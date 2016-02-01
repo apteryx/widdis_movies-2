@@ -7,20 +7,20 @@ class MovieData
   @@train_options = [:u1, :u2, :u3, :u4, :u5]
 
   def initialize root, option=nil
-    base_file = find_base(root, option)
-    test_file = find_test(root, option)
+    base_file = find_base option
+    test_file = find_test option
     @base = read (root + "/" + base_file)
     @test = read (root + "/" + test_file) if test_file
     draw_maps
   end
 
   #if option valid, return option.base; else u.data
-  def find_base root, option
+  def find_base option
     (@@train_options.include? option) ? (option.to_s + ".base") : "u.data"
   end
 
   #if option valid, return option.test; else nil
-  def find_test root, option
+  def find_test option
     option.to_s + ".test" if @@train_options.include? option
   end
 
@@ -89,9 +89,9 @@ class MovieData
 
     mean_diff = 0
     common.each do |mv|
-      avg_diff += diff(u1_r[mv], u2_r[mv]).to_f / common.length
+      mean_diff += diff(u1_r[mv], u2_r[mv]).to_f / common.length
     end
-    return ((5 - avg_diff)/5).round(2)
+    return ((5 - mean_diff)/5).round(2)
   end
 
   #map from other users to similarity to u1
@@ -115,3 +115,9 @@ class MovieData
     MovieTest.new results
   end
 end
+
+m = MovieData.new 'ml-100k', :u1
+t = m.run_test
+puts "mean: #{t.mean}"
+puts "stddev: #{t.stddev}"
+puts "rms: #{t.rms}"
